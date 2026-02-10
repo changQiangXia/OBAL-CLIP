@@ -267,10 +267,10 @@ site/
 
 # 保留文档
 docs/*.md
-README.md
-LICENSE
-CONTRIBUTING.md
-CHANGELOG.md
+!README.md
+!LICENSE
+!CONTRIBUTING.md
+!CHANGELOG.md
 
 # 保留源代码（确保src不被忽略）
 !src/
