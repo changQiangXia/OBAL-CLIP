@@ -1,0 +1,110 @@
+# RTX 3080 Ti (12GB) 最大化利用配置
+# 目标：充分利用 12GB 显存，最大化训练速度
+
+experiment_name: "the_architect_coco_max"
+seed: 42
+debug: false
+
+# Model Configuration
+model:
+  name: "the_architect"
+  clip_model: "ViT-B-32"
+  clip_pretrained: "openai"
+  
+  # Object Detector - 移到 GPU 加速
+  detector:
+    type: "yolov8"
+    model_name: "yolov8n.pt"  # nano 版本，仅 6MB
+    conf_threshold: 0.3
+    max_detections: 10
+    device: "cuda"  # 放到 GPU 上加速推理
+  
+  # Object-Aware Adapter - 增大容量
+  adapter:
+    hidden_dim: 768      # 从 512 提升到 768
+    num_heads: 12        # 从 8 提升到 12
+    num_layers: 6        # 从 4 提升到 6
+    dropout: 0.1
+    use_lora: false
+    freeze_clip: true    # 冻结 CLIP，只训练 Adapter
+
+# Training Configuration
+training:
+  num_epochs: 20
+  batch_size: 32       # 从 16 提升到 32
+  gradient_accumulation_steps: 1  # 从 2 降到 1（不需要累积了）
+  
+  optimizer:
+    type: "adamw"
+    lr: 2.0e-4         # 稍大学习率配合大 batch
+    weight_decay: 0.01
+    betas: [0.9, 0.999]
+  
+  scheduler:
+    type: "cosine"
+    warmup_steps: 1000  # 增加 warmup 步数
+    min_lr: 1.0e-6
+  
+  # Mixed Precision
+  amp: true            # 保持开启节省显存
+  
+  # Gradient Clipping
+  clip_grad_norm: 1.0
+  
+  # Checkpointing
+  save_every: 5
+  eval_every: 2
+  keep_last_n: 3
+
+# Loss Configuration
+loss:
+  contrastive_weight: 1.0
+  structural_weight: 0.5
+  temperature: 0.07
+  hard_negative_ratio: 0.6  # 稍微增加硬负样本比例
+
+# Data Configuration
+data:
+  use_synthetic: false
+  
+  train_datasets:
+    - name: "coco"
+      root: "data/coco"
+      split: "train"
+  
+  eval_datasets:
+    - name: "coco"
+      root: "data/coco"
+      split: "val"
+  
+  image_size: 224
+  
+  # DataLoader - 增加 workers 加速加载
+  num_workers: 8       # 从 4 提升到 8
+  pin_memory: true
+  persistent_workers: true  # 保持 workers 存活，减少启动开销
+  prefetch_factor: 4   # 预取因子
+  
+  # 数据增强
+  augmentation:
+    random_crop: true
+    random_flip: true
+    color_jitter: 0.15
+
+# Visualization Configuration
+visualization:
+  enabled: true
+  plot_every: 200
+  save_attention_maps: true
+  save_qualitative: true
+  num_qualitative_samples: 8
+
+# Logging
+logging:
+  level: "INFO"
+  use_tensorboard: true
+  use_wandb: false
+  log_every: 50
+
+# Device
+device: "auto"

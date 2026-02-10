@@ -1,0 +1,112 @@
+# COCO Training Configuration for AutoDL (12GB VRAM)
+# 使用真实 COCO 数据集训练
+
+experiment_name: "the_architect_coco"
+seed: 42
+debug: false
+
+# Model Configuration
+model:
+  name: "the_architect"
+  clip_model: "ViT-B-32"
+  clip_pretrained: "openai"
+  
+  # Object Detector
+  detector:
+    type: "yolov8"
+    model_name: "yolov8n.pt"  # nano 版本，轻量快速
+    conf_threshold: 0.3
+    max_detections: 10
+    device: "cpu"  # 检测器放 CPU，节省显存给 CLIP 训练
+  
+  # Object-Aware Adapter
+  adapter:
+    hidden_dim: 512
+    num_heads: 8
+    num_layers: 4
+    dropout: 0.1
+    use_lora: false
+    freeze_clip: true  # 冻结 CLIP，只训练 Adapter
+
+# Training Configuration
+training:
+  num_epochs: 10
+  batch_size: 16  # 12GB 显存可以支持
+  gradient_accumulation_steps: 2  # 等效 batch 32
+  
+  optimizer:
+    type: "adamw"
+    lr: 1.0e-4
+    weight_decay: 0.01
+    betas: [0.9, 0.999]
+  
+  scheduler:
+    type: "cosine"
+    warmup_steps: 500
+    min_lr: 1.0e-6
+  
+  # Mixed Precision
+  amp: true
+  
+  # Gradient Clipping
+  clip_grad_norm: 1.0
+  
+  # Checkpointing
+  save_every: 2
+  eval_every: 1
+  keep_last_n: 3
+
+# Loss Configuration
+loss:
+  contrastive_weight: 1.0
+  structural_weight: 0.5
+  temperature: 0.07
+  hard_negative_ratio: 0.5
+
+# Data Configuration
+data:
+  # 关闭合成数据，使用真实 COCO
+  use_synthetic: false
+  
+  # 训练数据集
+  train_datasets:
+    - name: "coco"
+      root: "data/coco"
+      split: "train"
+  
+  # 评估数据集（可选）
+  eval_datasets:
+    - name: "coco"
+      root: "data/coco"
+      split: "val"
+  
+  # 图像尺寸
+  image_size: 224
+  
+  # DataLoader
+  num_workers: 4
+  pin_memory: true
+  
+  # 数据增强
+  augmentation:
+    random_crop: true
+    random_flip: true
+    color_jitter: 0.1
+
+# Visualization Configuration
+visualization:
+  enabled: true
+  plot_every: 100
+  save_attention_maps: true
+  save_qualitative: true
+  num_qualitative_samples: 8
+
+# Logging
+logging:
+  level: "INFO"
+  use_tensorboard: true
+  use_wandb: false
+  log_every: 50
+
+# Device
+device: "auto"

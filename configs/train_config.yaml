@@ -1,0 +1,139 @@
+# Full Training Configuration for RTX 4090 (24GB VRAM)
+# 用于服务器全量训练
+
+experiment_name: "the_architect_full"
+seed: 42
+debug: false
+
+# Model Configuration
+model:
+  name: "the_architect"
+  clip_model: "ViT-L-14"  # 更大的 CLIP 模型
+  clip_pretrained: "openai"
+  
+  # Object Detector
+  detector:
+    type: "groundingdino"  # 使用更强的检测器
+    model_name: "groundingdino_swint_ogc"
+    conf_threshold: 0.25
+    max_detections: 20
+    device: "cuda:0"  # 检测器放在 GPU 上加速
+  
+  # Object-Aware Adapter
+  adapter:
+    hidden_dim: 512
+    num_heads: 8
+    num_layers: 4
+    dropout: 0.1
+    use_lora: false  # 全量微调
+    lora_rank: 16
+    freeze_clip: false  # 可选：端到端训练
+
+# Training Configuration
+training:
+  num_epochs: 50
+  batch_size: 32
+  gradient_accumulation_steps: 1  # 直接达到目标 batch size
+  
+  optimizer:
+    type: "adamw"
+    lr: 5.0e-5
+    weight_decay: 0.05
+    betas: [0.9, 0.98]
+  
+  scheduler:
+    type: "cosine"
+    warmup_steps: 2000
+    min_lr: 1.0e-7
+  
+  # Mixed Precision
+  amp: true
+  
+  # Gradient Clipping
+  clip_grad_norm: 1.0
+  
+  # Checkpointing
+  save_every: 5
+  eval_every: 2
+  keep_last_n: 5
+  
+  # Early Stopping
+  early_stopping:
+    enabled: true
+    patience: 10
+    metric: "val_binding_acc"
+    mode: "max"
+
+# Loss Configuration
+loss:
+  contrastive_weight: 1.0
+  structural_weight: 1.0
+  temperature: 0.07
+  hard_negative_ratio: 0.8  # 使用更多硬负样本
+  
+# Data Configuration
+data:
+  use_synthetic: false
+  
+  # 训练数据集
+  train_datasets:
+    - name: "coco"
+      root: "data/coco"
+      split: "train"
+      weight: 0.4
+    - name: "visual_genome"
+      root: "data/visual_genome"
+      split: "train"
+      weight: 0.4
+    - name: "cc12m"
+      root: "data/cc12m"
+      weight: 0.2
+  
+  # 评估数据集
+  eval_datasets:
+    - name: "comco"
+      root: "data/comco"
+    - name: "winoground"
+      root: "data/winoground"
+    - name: "aro"
+      root: "data/aro"
+  
+  # 图像尺寸
+  image_size: 336  # CLIP-L 支持 336x336
+  
+  # DataLoader
+  num_workers: 8
+  pin_memory: true
+  
+  # 数据增强
+  augmentation:
+    random_crop: true
+    random_flip: true
+    color_jitter: 0.2
+    auto_augment: "rand-m9-mstd0.5-inc1"
+
+# Visualization Configuration
+visualization:
+  enabled: true
+  plot_every: 500
+  save_attention_maps: true
+  save_qualitative: true
+  num_qualitative_samples: 12
+
+# Logging
+logging:
+  level: "INFO"
+  use_tensorboard: true
+  use_wandb: true
+  wandb_project: "the-architect"
+  log_every: 100
+
+# Device
+# 自动检测: cuda 如果可用，否则 cpu
+device: "auto"
+
+# Distributed Training (可选)
+distributed:
+  enabled: false
+  backend: "nccl"
+  world_size: 1

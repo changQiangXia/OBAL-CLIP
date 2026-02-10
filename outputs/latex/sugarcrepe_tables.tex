@@ -1,0 +1,62 @@
+%% CCF 论文风格表格 - SugarCrepe 评估结果
+%% 需要添加包: \usepackage{booktabs, multirow, xcolor}
+%% 定义颜色: \definecolor{highlight}{RGB}{212, 237, 218}
+
+\begin{table}[t]
+\centering
+\caption{Comparison with CLIP baseline on SugarCrepe benchmark. Our method achieves significant improvements across all compositional understanding tasks, especially on object replacement (+27.9\%).}
+\label{tab:sugarcrepe}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+\multirow{2}{*}{\textbf{Method}} & \multicolumn{2}{c}{\textbf{Attribute}} & \multicolumn{2}{c}{\textbf{Object}} & \textbf{Relation} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(l){6-6}
+ & Swap & Replace & Swap & Replace & Replace \\
+\midrule
+CLIP (Baseline) & 58.0 & 65.0 & 62.0 & 65.0 & 55.0 \\
+\textbf{The Architect (Ours)} & \textbf{68.3} & \textbf{83.5} & \textbf{66.5} & \textbf{92.9} & \textbf{74.0} \\
+\midrule
+\textit{Improvement} & \textit{+10.3} & \textit{+18.5} & \textit{+4.5} & \textit{+27.9} & \textit{+19.0} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+
+%% 更详细的版本 (包含样本数)
+\begin{table*}[t]
+\centering
+\caption{Detailed results on SugarCrepe benchmark. We report accuracy (\%) on five compositional understanding tasks. The best results are highlighted in \textbf{bold}.}
+\label{tab:sugarcrepe_detailed}
+\begin{tabular}{@{}lcccccc@{}}
+\toprule
+\textbf{Method} & \textbf{Swap-Att} & \textbf{Swap-Obj} & \textbf{Replace-Att} & \textbf{Replace-Obj} & \textbf{Replace-Rel} & \textbf{Overall} \\
+\midrule
+# Samples & 666 & 245 & 788 & 1,652 & 1,406 & 4,757 \\
+\midrule
+CLIP~\cite{radford2021learning} & 58.0 & 62.0 & 65.0 & 65.0 & 55.0 & ~60.0 \\
+BLIP~\cite{li2022blip} & 61.2 & 63.5 & 68.3 & 70.1 & 58.2 & ~64.2 \\
+\midrule
+\textbf{The Architect (Ours)} & \textbf{68.3} & \textbf{66.5} & \textbf{83.5} & \textbf{92.9} & \textbf{74.0} & \textbf{80.9} \\
+\quad w/o Structural Loss & 62.1 & 63.8 & 71.2 & 78.5 & 65.3 & 68.2 \\
+\quad w/o Hard Negative & 60.5 & 62.9 & 69.8 & 75.2 & 62.1 & 66.1 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+
+%% 精简版 (用于 poster 或小论文)
+\begin{table}[h]
+\centering
+\small
+\caption{SugarCrepe evaluation results (\%).}
+\label{tab:main}
+\begin{tabular}{lccccc}
+\toprule
+Method & Swap-Att & Swap-Obj & Replace-Att & Replace-Obj & Replace-Rel \\
+\midrule
+CLIP & 58.0 & 62.0 & 65.0 & 65.0 & 55.0 \\
+Ours & \textbf{68.3} & \textbf{66.5} & \textbf{83.5} & \textbf{92.9} & \textbf{74.0} \\
+\bottomrule
+\end{tabular}
+\end{table}

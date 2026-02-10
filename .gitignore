@@ -1,0 +1,314 @@
+# =============================================================================
+# The Architect - Git Ignore
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Project Specific - 项目特定
+# -----------------------------------------------------------------------------
+
+# 项目指令文件（内部使用，不公开）
+instruction.md
+instruction*.md
+
+# 大文件和模型检查点
+checkpoints/*.pt
+checkpoints/*.pth
+checkpoints/*.bin
+models/*.pt
+models/*.pth
+models/*.bin
+outputs/checkpoints/*.pt
+outputs/checkpoints/*.pth
+outputs/checkpoints/*.bin
+
+# 训练日志（可能很大）
+logs/
+logs/*/
+*.log
+
+# TensorBoard 日志
+events.out.tfevents.*
+
+# Weights & Biases 本地缓存
+wandb/
+
+# 实验输出（但保留示例报告）
+outputs/experiment_report.json
+outputs/sugarcrepe_results*.json
+outputs/eval_results*.json
+outputs/aro_results*.json
+
+# 错误分析（可能包含敏感信息）
+outputs/error_analysis/
+
+# -----------------------------------------------------------------------------
+# Data - 数据集（不应上传到版本控制）
+# -----------------------------------------------------------------------------
+
+data/coco/
+data/coco2017/
+data/flickr30k/
+data/visual_genome/
+data/raw/
+data/processed/
+
+# 保持 data/ 目录结构，但忽略内容
+data/**/*.jpg
+data/**/*.png
+data/**/*.jpeg
+data/**/*.json
+data/**/*.txt
+!data/.gitkeep
+
+# 保留 SugarCrepe 评估数据（小文件，用于示例）
+!data/sugarcrepe/
+
+# -----------------------------------------------------------------------------
+# Python - Python 相关
+# -----------------------------------------------------------------------------
+
+# 字节码
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# 分发/打包
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# 单元测试
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints/*
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# PEP 582
+__pypackages__/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder
+.spyderproject
+.spyproject
+
+# Rope
+.ropeproject
+
+# mkdocs
+docs/_build/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre
+.pyre/
+
+# Pytype
+.pytype/
+
+# Cython
+cython_debug/
+
+# -----------------------------------------------------------------------------
+# IDE - 编辑器/IDE
+# -----------------------------------------------------------------------------
+
+# VS Code
+.vscode/
+*.code-workspace
+!.vscode/settings.json.example
+
+# PyCharm
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+#*#
+.#*
+
+# Eclipse
+.project
+.pydevproject
+.settings/
+
+# -----------------------------------------------------------------------------
+# OS - 操作系统
+# -----------------------------------------------------------------------------
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Linux
+*~
+.nfs*
+
+# -----------------------------------------------------------------------------
+# Large Media - 大媒体文件
+# -----------------------------------------------------------------------------
+
+# 图片（如果由代码生成）
+# outputs/visualizations/*.png
+# outputs/visualizations/*.jpg
+
+# 视频
+*.mp4
+*.avi
+*.mov
+*.mkv
+
+# 音频
+*.mp3
+*.wav
+*.ogg
+
+# -----------------------------------------------------------------------------
+# Documentation - 文档构建
+# -----------------------------------------------------------------------------
+
+docs/_build/
+docs/_static/
+docs/_templates/
+site/
+
+# -----------------------------------------------------------------------------
+# Keep - 保留的文件（使用 ! 取消忽略）
+# -----------------------------------------------------------------------------
+
+# 保留目录结构
+!.gitkeep
+!data/.gitkeep
+!logs/.gitkeep
+!outputs/.gitkeep
+!checkpoints/.gitkeep
+
+# 保留示例配置文件
+!configs/*.yaml
+!configs/*.yml
+
+# 保留文档
+docs/*.md
+README.md
+LICENSE
+CONTRIBUTING.md
+CHANGELOG.md
+
+# 保留源代码（确保src不被忽略）
+!src/
+!src/**/*.py
+
+# 保留脚本
+!scripts/
+!scripts/**/*.py
+
+# 保留测试（但忽略缓存）
+!tests/
+!tests/**/*.py
+
+# 保留 Notebook 示例（但忽略检查点）
+!notebooks/*.ipynb
+
+# 保留生成的报告作为示例（可选，取消注释以启用）
+# !outputs/evaluation_report.html
+# !outputs/visualizations/ppt_*.png
+# !outputs/visualizations/*_comparison.png
+# !outputs/visualizations/capability_radar.png
+
+# =============================================================================
+# End of .gitignore
+# =============================================================================
+
+# System & AutoDL
+.Trash-0/
+.autodl/
+*.db
+
+
+# YOLO weights (auto-downloaded)
+yolov8n.pt
+yolov8*.pt
+
+
+# YOLO weights (auto-downloaded)
+yolov8n.pt
+yolov8*.pt
+

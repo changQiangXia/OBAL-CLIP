@@ -1,0 +1,96 @@
+# RTX 3080 Ti (12GB) OMEGA 终极配置
+# 目标：使用 11GB 显存，达到单卡极限性能
+
+experiment_name: "the_architect_coco_omega"
+seed: 42
+debug: false
+
+# Model Configuration
+model:
+  name: "the_architect"
+  clip_model: "ViT-B-32"
+  clip_pretrained: "openai"
+  
+  detector:
+    type: "yolov8"
+    model_name: "yolov8n.pt"
+    conf_threshold: 0.3
+    max_detections: 10
+    device: "cuda"
+  
+  # 超大规模 Adapter - 接近大模型
+  adapter:
+    hidden_dim: 1536     # 保持 1536
+    num_heads: 16        
+    num_layers: 12       # 保持 12 层
+    dropout: 0.1
+    use_lora: false
+    freeze_clip: true
+
+# Training Configuration
+training:
+  num_epochs: 20
+  batch_size: 96       # 从 80 提升到 96
+  gradient_accumulation_steps: 1
+  
+  optimizer:
+    type: "adamw"
+    lr: 4.8e-4         # 更大学习率配合超大 batch (96 * 5e-6)
+    weight_decay: 0.01
+    betas: [0.9, 0.98]
+  
+  scheduler:
+    type: "cosine"
+    warmup_steps: 3000  # 增加 warmup
+    min_lr: 1.0e-6
+  
+  amp: true
+  clip_grad_norm: 1.0
+  save_every: 5
+  eval_every: 2
+  keep_last_n: 3
+
+# Loss Configuration
+loss:
+  contrastive_weight: 1.0
+  structural_weight: 0.5
+  temperature: 0.07
+  hard_negative_ratio: 1.0  # 保持最大硬负样本
+
+# Data Configuration
+data:
+  use_synthetic: false
+  train_datasets:
+    - name: "coco"
+      root: "data/coco"
+      split: "train"
+  eval_datasets:
+    - name: "coco"
+      root: "data/coco"
+      split: "val"
+  
+  image_size: 224
+  num_workers: 8
+  pin_memory: true
+  persistent_workers: true
+  prefetch_factor: 4
+  
+  augmentation:
+    random_crop: true
+    random_flip: true
+    color_jitter: 0.2
+
+visualization:
+  enabled: false       # 关闭可视化节省显存
+  plot_every: 1000
+  save_attention_maps: false
+  save_qualitative: false
+  num_qualitative_samples: 0
+
+logging:
+  level: "INFO"
+  use_tensorboard: true
+  use_wandb: false
+  log_every: 100       # 减少日志频率，减少 CPU 开销
+
+device: "auto"
