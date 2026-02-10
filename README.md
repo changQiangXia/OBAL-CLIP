@@ -21,6 +21,20 @@
 
 > SugarCrepe 是组合性理解的权威基准，包含 4,757 个测试样本，覆盖属性交换、对象替换、关系替换等多种场景。
 
+### 可视化结果
+
+**各子集准确率对比**
+![Accuracy Comparison](outputs/visualizations/sugarcrepe_accuracy_comparison.png)
+
+**与 CLIP Baseline 对比**
+![Baseline Comparison](outputs/visualizations/baseline_comparison.png)
+
+**五维能力雷达图**
+![Capability Radar](outputs/visualizations/capability_radar.png)
+
+**错误案例分析**
+![Error Analysis](outputs/visualizations/error_analysis.png)
+
 ---
 
 ## 🏗️ 核心特性
